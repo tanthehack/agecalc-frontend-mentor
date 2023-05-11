@@ -1,0 +1,172 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: hsl(0, 0%, 94%);
+}
+
+hr {
+  border: none;
+  background-color: hsl(0, 0%, 86%);
+  height: 1px;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.calc-main {
+  background-color: hsl(0, 0%, 100%);
+  padding: 3rem;
+
+  border-bottom-right-radius: 150px !important;
+  border-radius: 20px;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-btn-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+
+  padding: 20px 0;
+}
+
+.form-btn-wrapper button {
+  background-color: hsl(259, 100%, 65%);
+  padding: 15px;
+  border: none;
+  border-radius: 100%;
+  z-index: 1;
+}
+
+.form-btn-wrapper button .disabled {
+  background-color: hsl(0, 0%, 8%);
+}
+
+.form-wrapper button:hover {
+  background-color: hsl(0, 0%, 8%);
+  cursor: pointer;
+}
+
+.form-wrapper svg {
+  width: clamp(30px, 5vw, 40px);
+  height: clamp(30px, 5vw, 40px);
+}
+
+.form-divider {
+  position: absolute;
+  top: 50%;
+
+  width: 100%;
+}
+
+.age-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+
+  padding-right: 9rem;
+}
+
+.age-form div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.age-form div span {
+  color: hsl(0, 100%, 67%);
+  font-size: clamp(0.3rem, 12vw, 0.6rem);
+  height: 20px;
+}
+
+.age-form label {
+  font-size: clamp(0.4rem, 12vw, 0.7rem);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: hsl(0, 1%, 44%);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.age-form input {
+  width: clamp(80px, 12vw, 140px);
+  height: clamp(48px, 12vw, 60px);
+  border-radius: 10px;
+  border: 1px solid hsl(0, 0%, 86%);
+
+  padding: 10px;
+
+  caret-color: hsl(259, 100%, 65%);
+  font-size: clamp(1rem, 4vw, 2rem);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+
+  outline: none;
+}
+
+.age-form input.invalid {
+  border: 1px solid hsl(0, 100%, 67%) !important;
+}
+
+.age-form input:hover {
+  border: 1px solid hsl(259, 100%, 65%);
+}
+
+.age-form input:focus {
+  border: 1px solid hsl(259, 100%, 65%);
+}
+
+.age-display {
+  font-size: clamp(2rem, 12vw, 4rem);
+  font-weight: 800;
+  font-style: italic;
+  color: hsl(0, 0%, 8%);
+}
+
+.age-display p {
+  margin-bottom: -5%;
+}
+
+.age-display>div span {
+  color: hsl(259, 100%, 65%);
+  padding-right: 10px;
+}
+
+@media only screen and (max-width: 375px) {
+  .calc-main {
+    padding: 3rem 1rem;
+  }
+
+  .age-form {
+    padding: 0;
+  }
+
+  .form-btn-wrapper {
+    justify-content: center;
+  }
+}
