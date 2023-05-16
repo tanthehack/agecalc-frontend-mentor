@@ -1,11 +1,43 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useForm } from "./hooks/formValidate";
+
+const regEx = /[a-zA-Z]/;
+const currDate = new Date();
+
+const isValidDay = (value) => (value.trim() !== '' && parseInt(value) <= 31 && !regEx.test(value))
+const isValidMonth = (value) => (value.trim() !== '' && parseInt(value) <= 12 && !regEx.test(value))
+const isValidYear = (value) => (value.trim() !== '' && (parseInt(value) <= currDate.getFullYear()) && !regEx.test(value))
 
 const App = () => {
-  const [val, setVal] = useState({
-    day: "",
-    month: "",
-    year: ""
-  });
+
+  const [dateError, setDateError] = useState(false)
+
+  const {
+    value: enteredDay,
+    hasError: dayHasError,
+    isValid: dayIsValid,
+    valueChangeHandler: dayChangeHandler,
+    inputBlurHandler: dayBlurHandler,
+    reset: resetDay
+  } = useForm(isValidDay);
+
+  const {
+    value: enteredMonth,
+    hasError: monthHasError,
+    isValid: monthIsValid,
+    valueChangeHandler: monthChangeHandler,
+    inputBlurHandler: monthBlurHandler,
+    reset: resetMonth
+  } = useForm(isValidMonth);
+
+  const {
+    value: enteredYear,
+    hasError: yearHasError,
+    isValid: yearIsValid,
+    valueChangeHandler: yearChangeHandler,
+    inputBlurHandler: yearBlurHandler,
+    reset: resetYear
+  } = useForm(isValidYear);
 
   const [displayAge, setAge] = useState({
     days: "--",
@@ -13,65 +45,25 @@ const App = () => {
     year: "--",
   });
 
-  const [errors, setState] = useState({
-    day: "",
-    month: "",
-    year: "",
-  });
+  let isValid = false;
 
-  const [disabled, setDisabled] = useState(false);
-
-  let invalidBool = false;
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    validateForm(name, value);
-
-    setVal({
-      ...val,
-      [e.target.name]: value
-    })
-  }
-
-  const validateForm = (name, value) => {
-    let regExp = /[a-zA-Z]/g;
-
-    switch (name) {
-      case 'day':
-        errors.day =
-          parseInt(value) > 31 || regExp.test(value) ? 'Must be a valid day' : '';
-        break;
-
-      case 'month':
-        errors.month =
-          parseInt(value) > 12 || regExp.test(value) ? 'Must be a valid month' : '';
-        break;
-
-      case 'year':
-        errors.year =
-          parseInt(value) > new Date().getFullYear() ? 'Must be in the past' : regExp.test(value) ? 'Must be a valid year' : '';
-        break;
-
-      default:
-        break;
-    }
-    setState(errors)
-
-    Object.values(errors).forEach(error => {
-      if (error.length > 0) {
-        invalidBool = true
-      }
-    })
+  if (dayIsValid && monthIsValid && yearIsValid) {
+    isValid = true
   }
 
   const calcAge = (e) => {
     e.preventDefault();
 
+    const inputDate = new Date(`${parseInt(enteredDay)}-${parseInt(enteredMonth)}-${parseInt(enteredYear)}`)
+    if (!(inputDate instanceof Date && !isNaN(inputDate))) {
+      setDateError(prev => !prev)
+      return;
+    }
+
     //Storing Values from input fields
-    let day = parseInt(val.day);
-    let month = parseInt(val.month);
-    let year = parseInt(val.year);
+    let day = parseInt(enteredDay);
+    let month = parseInt(enteredMonth);
+    let year = parseInt(enteredYear);
 
     //Creating current date object
     const date = new Date();
@@ -111,6 +103,10 @@ const App = () => {
 
     //update the diplay component
     setAge(age)
+
+    resetDay();
+    resetMonth();
+    resetYear();
   }
 
   return (
@@ -119,20 +115,50 @@ const App = () => {
         <form className="form-wrapper">
           <div className="age-form">
             <div>
-              <label>Day <input type='text' name="day" placeholder="DD" value={val.day} onChange={handleChange}></input></label>
-              <span className="error">{errors.day}</span>
+              <label className={dayHasError || dateError ? "invalid" : null}>Day
+                <input
+                  className={dayHasError || dateError ? "invalid" : null}
+                  type='text'
+                  name="day"
+                  placeholder="DD"
+                  value={enteredDay}
+                  onChange={dayChangeHandler}
+                  onBlur={dayBlurHandler}
+                />
+              </label>
+              <span className="error">{dayHasError || dateError ? `Must be a valid ${dayHasError ? "day" : "date"}` : null}</span>
             </div>
             <div>
-              <label>Month<input type='text' name="month" placeholder="MM" value={val.month} onChange={handleChange}></input></label>
-              <span className="error">{errors.month}</span>
+              <label className={monthHasError || dateError ? "invalid" : null}>Month
+                <input
+                  className={monthHasError || dateError ? "invalid" : null}
+                  type='text'
+                  name="month"
+                  placeholder="MM"
+                  value={enteredMonth}
+                  onChange={monthChangeHandler}
+                  onBlur={monthBlurHandler}
+                />
+              </label>
+              <span className="error">{monthHasError ? "Must be a valid month" : null}</span>
             </div>
             <div>
-              <label>Year<input type='text' name="year" placeholder="YYYY" value={val.year} onChange={handleChange}></input></label>
-              <span className="error">{errors.year}</span>
+              <label className={yearHasError || dateError ? "invalid" : null}>Year
+                <input
+                  className={yearHasError || dateError ? "invalid" : null}
+                  type='text'
+                  name="year"
+                  placeholder="YYYY"
+                  value={enteredYear}
+                  onChange={yearChangeHandler}
+                  onBlur={yearBlurHandler}
+                />
+              </label>
+              <span className="error">{yearHasError ? "Must be in the past" : null}</span>
             </div>
           </div>
           <div className="form-btn-wrapper">
-            <button onClick={calcAge} disabled={disabled}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 44"><g fill="none" stroke="#FFF" strokeWidth="2"><path d="M1 22.019C8.333 21.686 23 25.616 23 44M23 44V0M45 22.019C37.667 21.686 23 25.616 23 44" /></g></svg></button>
+            <button disabled={!isValid} className={!isValid ? "disabled" : null} onClick={calcAge} ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 44"><g fill="none" stroke="#FFF" strokeWidth="2"><path d="M1 22.019C8.333 21.686 23 25.616 23 44M23 44V0M45 22.019C37.667 21.686 23 25.616 23 44" /></g></svg></button>
             <hr className="form-divider" />
           </div>
         </form>

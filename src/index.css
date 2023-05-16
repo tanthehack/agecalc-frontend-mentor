@@ -59,7 +59,7 @@ hr {
   z-index: 1;
 }
 
-.form-btn-wrapper button .disabled {
+.form-btn-wrapper button.disabled {
   background-color: hsl(0, 0%, 8%);
 }
 
@@ -111,6 +111,11 @@ hr {
 
   display: flex;
   flex-direction: column;
+}
+
+.age-form label.invalid {
+  color: hsl(0, 100%, 67%) !important;
+  font-weight: 700;
 }
 
 .age-form input {
