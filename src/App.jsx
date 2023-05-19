@@ -54,8 +54,9 @@ const App = () => {
   const calcAge = (e) => {
     e.preventDefault();
 
-    const inputDate = new Date(`${parseInt(enteredDay)}-${parseInt(enteredMonth)}-${parseInt(enteredYear)}`)
-    if (!(inputDate instanceof Date && !isNaN(inputDate))) {
+    const inputDate = new Date(`${parseInt(enteredYear)}-${parseInt(enteredMonth)}-${parseInt(enteredDay)}`)
+    console.log(inputDate)
+    if (!(inputDate.getTime() === inputDate.getTime())) {
       setDateError(prev => !prev)
       return;
     }
@@ -74,20 +75,25 @@ const App = () => {
     //Age Declarations
     let age = {};
 
-    let ageYears = date.getFullYear() - year;
+    let ageYears = 0;
     let ageMonth = 0;
     let ageDays = 0;
 
 
-    //Get Total Number of Months
-    if (month > date.getMonth()) { //If birth month has not been reached yet
-      ageYears -= 1; //Reduce age
-
-      ageMonth = date.getMonth() + 12; //Add Twleve Months to current month
-      ageMonth -= month //Remove birth month
+    if ((date.getMonth() + 1) < month) {
+      ageYears = (date.getFullYear() - year) - 1;
     } else {
-      ageMonth = date.getMonth() - month; //Diff btw current month and birth month
+      ageYears = date.getFullYear() - year
     }
+
+    //Get Total Number of Months
+    if (date.getDate() >= day) { //If birth month has not been reached yet
+      ageMonth = date.getMonth() - month;
+    } else if (date.getDate() < day) {
+      ageMonth = date.getMonth() - month - 1;
+    }
+    console.log(ageMonth)
+    ageMonth = ageMonth < 0 ? ageMonth + 12 : ageMonth;
 
     //Get Total Number of Days
     if (date.getDate() >= day) { //if birth date has been reached, birthday 🎂
@@ -97,9 +103,9 @@ const App = () => {
     }
 
     //Add days, month and year properties to age object
-    age.days = ageDays.toString();
-    age.months = ageMonth.toString();
-    age.year = ageYears.toString();
+    age.days = ageDays?.toString();
+    age.months = ageMonth?.toString();
+    age.year = ageYears?.toString();
 
     //update the diplay component
     setAge(age)
